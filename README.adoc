@@ -17,7 +17,7 @@ include:pom.xml
 if we want use gradlew as a build tool 
 ====
 ----
-include::initial/build.gradle
+include::build.gradle
 ----
 ====
 
