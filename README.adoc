@@ -1,0 +1,187 @@
+== Spring boot starter
+
+This repository will contain the basic starter kit for Sprin Boot.
+
+currently this repo contains both maven and gradlew confiuration.
+
+===Configuration
+
+`pom.xml` is the main configuration file,  if we want to use  Maven as a build tool option:
+
+====
+----
+include:pom.xml
+----
+====
+
+if we want use gradlew as a build tool 
+====
+----
+include::initial/build.gradle[]
+----
+====
+
+
+== To Run the Application
+
+To run the application, run the following command
+====
+----
+./gradlew bootRun
+----
+====
+
+If you use Maven, run the following command
+
+====
+----
+./mvnw spring-boot:run
+----
+====
+
+
+Now run the service with curl or browser
+
+====
+----
+$ curl localhost:8080
+Hello World
+----
+====
+
+management.endpoints.jmx-org.springframework.boot.actuate.autoconfigure.endpoint.jmx.JmxEndpointProperties
+management.endpoints.web-org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties
+management.endpoints.web.cors-org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties
+management.health.status-org.springframework.boot.actuate.autoconfigure.health.HealthIndicatorProperties
+management.info-org.springframework.boot.actuate.autoconfigure.info.InfoContributorProperties
+management.metrics-org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties
+management.metrics.export.simple-org.springframework.boot.actuate.autoconfigure.metrics.export.simple.SimpleProperties
+management.server-org.springframework.boot.actuate.autoconfigure.web.server.ManagementServerProperties
+management.trace.http-org.springframework.boot.actuate.autoconfigure.trace.http.HttpTraceProperties
+----
+====
+
+The actuator exposes the following:
+
+* http://localhost:8080/actuator/health[actuator/health]
+* http://localhost:8080/actuator/info[actuator/info]
+* http://localhost:8080/actuator[actuator]
+
+NOTE: There is also an `/actuator/shutdown` endpoint, but, by default, it is visible only
+through JMX. To http://docs.spring.io/spring-boot/docs/{spring_boot_version}/reference/htmlsingle/#production-ready-endpoints-enabling-endpoints[enable it as an HTTP endpoint], add
+`management.endpoint.shutdown.enabled=true` to your `application.properties` file
+and expose it with `management.endpoints.web.exposure.include=health,info,shutdown`.
+However, you probably should not enable the shutdown endpoint for a publicly available
+application.
+
+You can check the health of the application by running the following command:
+
+====
+[source,bash]
+----
+$ curl localhost:8080/actuator/health
+{"status":"UP"}
+----
+====
+
+You can try also to invoke shutdown through curl, to see what happens when you have not
+added the necessary line (shown in the preceding note) to `application.properties`:
+
+====
+[source,bash]
+----
+$ curl -X POST localhost:8080/actuator/shutdown
+{"timestamp":1401820343710,"error":"Not Found","status":404,"message":"","path":"/actuator/shutdown"}
+----
+====
+
+Because we did not enable it, the requested endpoint is not available (because the endpoint does not
+exist).
+
+For more details about each of these REST endpoints and how you can tune their settings
+with an `application.properties` file (in `src/main/resources`), see the
+the http://docs.spring.io/spring-boot/docs/{spring_boot_version}/reference/htmlsingle/#production-ready-endpoints[documentation about the endpoints].
+
+== View Spring Boot's Starters
+
+You have seen some of
+http://docs.spring.io/spring-boot/docs/{spring_boot_version}/reference/htmlsingle/#using-boot-starter[Spring Boot's "`starters`"].
+You can see them all
+https://github.com/spring-projects/spring-boot/tree/master/spring-boot-project/spring-boot-starters[here in source code].
+
+== JAR Support and Groovy Support
+
+The last example showed how Spring Boot lets you wire beans that you may not be aware you
+need. It also showed how to turn on convenient management services.
+
+However, Spring Boot does more than that. It supports not only traditional WAR file
+deployments but also lets you put together executable JARs, thanks to Spring Boot's loader
+module. The various guides demonstrate this dual support through the
+`spring-boot-gradle-plugin` and `spring-boot-maven-plugin`.
+
+On top of that, Spring Boot also has Groovy support, letting you build Spring MVC web
+applications with as little as a single file.
+
+Create a new file called `app.groovy` and put the following code in it:
+
+====
+[source,java]
+----
+@RestController
+class ThisWillActuallyRun {
+
+    @RequestMapping("/")
+    String home() {
+        return "Hello, World!"
+    }
+
+}
+----
+====
+
+NOTE: It does not matter where the file is. You can even fit an application that small
+inside a https://twitter.com/rob_winch/status/364871658483351552[single tweet]!
+
+Next, https://docs.spring.io/spring-boot/docs/{spring_boot_version}/reference/htmlsingle/#getting-started-installing-the-cli[install Spring Boot's CLI].
+
+Run the Groovy application by running the following command:
+
+====
+[source,bash]
+----
+$ spring run app.groovy
+----
+====
+
+NOTE: Shut down the previous application, to avoid a port collision.
+
+From a different terminal window, run the following curl command (shown with its output):
+
+====
+[source,bash]
+----
+$ curl localhost:8080
+Hello, World!
+----
+====
+
+Spring Boot does this by dynamically adding key annotations to your code and using
+http://www.groovy-lang.org/Grape[Groovy Grape] to pull down the libraries that are needed
+to make the app run.
+
+== Summary
+
+Congratulations! You built a simple web application with Spring Boot and learned how it
+can ramp up your development pace. You also turned on some handy production services.
+This is only a small sampling of what Spring Boot can do. See
+http://docs.spring.io/spring-boot/docs/{spring_boot_version}/reference/htmlsingle[Spring Boot's online docs]
+for much more information.
+
+== See Also
+
+The following guides may also be helpful:
+
+* https://spring.io/guides/gs/securing-web/[Securing a Web Application]
+* https://spring.io/guides/gs/serving-web-content/[Serving Web Content with Spring MVC]
+
+anclude::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/footer.adoc[]
